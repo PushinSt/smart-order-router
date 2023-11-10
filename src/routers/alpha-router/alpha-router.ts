@@ -379,7 +379,7 @@ export type AlphaRouterConfig = {
 
 export class AlphaRouter
   implements IRouter<AlphaRouterConfig>,
-    ISwapToRatio<AlphaRouterConfig, SwapAndAddConfig> {
+  ISwapToRatio<AlphaRouterConfig, SwapAndAddConfig> {
   protected chainId: ChainId;
   protected provider: BaseProvider;
   protected multicall2Provider: UniswapMulticallProvider;
@@ -583,7 +583,7 @@ export class AlphaRouter
               maxTimeout: 1000,
             },
             {
-              multicallChunk: 210,
+              multicallChunk: 100, //210,
               gasLimitPerCall: 705_000,
               quoteMinSuccessRate: 0.15,
             },
@@ -1363,7 +1363,7 @@ export class AlphaRouter
         this.l2GasDataProvider
           ? await this.l2GasDataProvider!.getGasData()
           : undefined,
-          providerConfig
+        providerConfig
       );
       metric.putMetric(
         'SimulateTransaction',
@@ -1636,29 +1636,29 @@ export class AlphaRouter
       const beforeGetRoutesThenQuotes = Date.now();
 
       quotePromises.push(
-          v2CandidatePoolsPromise.then((v2CandidatePools) =>
-              this.v2Quoter.getRoutesThenQuotes(
-                  tokenIn,
-                  tokenOut,
-                  amount,
-                  amounts,
-                  percents,
-                  quoteToken,
-                  v2CandidatePools!,
-                  tradeType,
-                  routingConfig,
-                  undefined,
-                  gasPriceWei
-              ).then((result) => {
-                metric.putMetric(
-                    `SwapRouteFromChain_V2_GetRoutesThenQuotes_Load`,
-                    Date.now() - beforeGetRoutesThenQuotes,
-                    MetricLoggerUnit.Milliseconds
-                );
+        v2CandidatePoolsPromise.then((v2CandidatePools) =>
+          this.v2Quoter.getRoutesThenQuotes(
+            tokenIn,
+            tokenOut,
+            amount,
+            amounts,
+            percents,
+            quoteToken,
+            v2CandidatePools!,
+            tradeType,
+            routingConfig,
+            undefined,
+            gasPriceWei
+          ).then((result) => {
+            metric.putMetric(
+              `SwapRouteFromChain_V2_GetRoutesThenQuotes_Load`,
+              Date.now() - beforeGetRoutesThenQuotes,
+              MetricLoggerUnit.Milliseconds
+            );
 
-                return result;
-              })
-          )
+            return result;
+          })
+        )
       );
     }
 
